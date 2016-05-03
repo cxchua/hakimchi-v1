@@ -1,7 +1,11 @@
-// const User = require('../models/user')
+const User = require('../models/user')
 const LocalStrategy = require('passport-local').Strategy
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const request = require('request')
+const request2 = require('request-json')
+var google = require('googleapis');
+var client = request2.createClient('http://localhost:3000/');
+
 // const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID
 // const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET
 
@@ -65,17 +69,71 @@ module.exports = function (passport) {
   passport.use('google', new GoogleStrategy({
     clientID: '266175055372-fvrdomie0qlg3kecntp32ub090oraj05.apps.googleusercontent.com',
     clientSecret: 'avYamacln1oZ7mlJpGcsfeLL',
-    callbackURL: 'http://localhost:3000/auth/google/callback'
-    // scope: ['https://www.googleapis.com/auth/calendar']
+    callbackURL: 'http://localhost:3000/auth/google/callback',
+    scope: ['profile','https://www.googleapis.com/auth/calendar.readonly','https://www.googleapis.com/auth/gmail.readonly','https://www.google.com/m8/feeds/']
   },
   function(accessToken, refreshToken, profile, cb) {
       // console.log(accessToken);
-      cb(null,profile,{message: 'chicken is here'})
-
-      request("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token="+accessToken,function(error,response,body){
-        // console.log('This is the body from contacts' + body);
-        // console.log(body.array.feed.entry[0])
+      cb(null,profile,{message:accessToken})
+      console.log("Access Token:" + accessToken)
+      //Calling for contacts data
+      request("https://www.google.com/m8/feeds/contacts/default/full?alt=json&start-index=1&max-results=1000&access_token="+accessToken,function(error,response,body){
+        var bodyX = JSON.parse(body);
+        console.log('CONTACTS:')
+        for(i=0; i<bodyX.feed.entry.length; i++){
+          console.log('Name:' + bodyX.feed.entry[i].title.$t);
+          console.log('Email:' + bodyX.feed.entry[i].gd$email[0].address);
+        }
       })
+      //Calling for calendar data
+      // request("https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json&start-index=1&max-results=10&access_token="+accessToken,function(error,response,body){
+      //   var bodyX = JSON.parse(body);
+      //   console.log('CALENDAR EVENTS:')
+      //   for(i=0; i<bodyX.items.length; i++){
+      //     console.log(bodyX.items[i].start.dateTime)
+      //     console.log('Summary:' + bodyX.items[i].summary)
+      //   }
+      // })
+
+      // //Calling for mail data - message
+      // request("https://www.googleapis.com/gmail/v1/users/me/messages?alt=json&start-index=1&max-results=10&access_token="+accessToken,function(error,response,body){
+      //   var bodyX = JSON.parse(body);
+      //   console.log('MESSAGE DATA:')
+      //   for(i=0; i<bodyX.messages.length; i++){
+      //     var urlY = ('https://www.googleapis.com/gmail/v1/users/me/messages/'+ (bodyX.messages[i].id) + '?alt=json&start-index=1&max-results=10&access_token=' + accessToken)
+      //     request(urlY,function(error,response,body){
+      //       var bodyY = JSON.parse(body);
+      //       console.log('Message ID:' + bodyY.id)
+      //       // console.log('Headers:' + bodyY.payload.headers.length)
+      //       for (j=0; j<bodyY.payload.headers.length; j++){
+      //         if(bodyY.payload.headers[j].name==="Date") {console.log('Date:' + bodyY.payload.headers[j].value)}
+      //         if(bodyY.payload.headers[j].name==="From") {
+      //           var fullFromString = bodyY.payload.headers[j].value
+      //           if(fullFromString.indexOf("<") > 0){
+      //             var emailOnly = fullFromString.substring(fullFromString.lastIndexOf("<")+1,fullFromString.lastIndexOf(">"))
+      //             console.log('From:' + emailOnly)
+      //           }
+      //           else {console.log('From:' + fullFromString)}
+      //         }
+      //         if(bodyY.payload.headers[j].name==="Subject") {console.log('Subject:' + bodyY.payload.headers[j].value)}
+      //       }
+      //     })
+      //   }
+      // })
+
+
+
+
+
+      //// Using request-json instead for contacts
+      // client.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token="+accessToken, function(err, res, body) {
+      //   for(i=0; i<body.feed.entry.length; i++){
+      //     console.log(body.feed.entry[i].title.$t);
+      //     console.log(body.feed.entry[i].gd$email[0].address);
+      //   }
+      // });
+
+
 
       // User.findOrCreate({ googleId: profile.id }, function (err, user) {
       //   return cb(err, user);

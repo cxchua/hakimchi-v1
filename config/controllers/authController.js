@@ -3,7 +3,7 @@ const request = require('request')
 // const createProfile = require('./createProfile')
 
 function goGoogle (req, res) {
-  return passport.authenticate('google', { scope: ['profile','https://www.googleapis.com/auth/calendar.readonly','https://www.googleapis.com/auth/gmail.readonly','https://www.google.com/m8/feeds/'] })(req, res)
+  return passport.authenticate('google')(req, res)
 }
 
 function googleCallback (req, res) {
@@ -13,7 +13,7 @@ function googleCallback (req, res) {
     req.logIn(user, function (err) {
       if (err) throw err
       // console.log(user)
-      console.log('From googleCallback' + info.accesstoken);
+      // console.log('From googleCallback' + info.accesstoken);
       // request("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token="+info.accesstoken,function(error,response,body){
       //   console.log('This is the body from contacts' + body);
       //
