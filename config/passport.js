@@ -1,6 +1,7 @@
 // const User = require('../models/user')
 const LocalStrategy = require('passport-local').Strategy
 const GoogleStrategy = require('passport-google-oauth20').Strategy
+const request = require('request')
 // const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID
 // const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET
 
@@ -68,8 +69,14 @@ module.exports = function (passport) {
     // scope: ['https://www.googleapis.com/auth/calendar']
   },
   function(accessToken, refreshToken, profile, cb) {
-      console.log(accessToken);
+      // console.log(accessToken);
       cb(null,profile,{message: 'chicken is here'})
+
+      request("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token="+accessToken,function(error,response,body){
+        // console.log('This is the body from contacts' + body);
+        // console.log(body.array.feed.entry[0])
+      })
+
       // User.findOrCreate({ googleId: profile.id }, function (err, user) {
       //   return cb(err, user);
       // });
