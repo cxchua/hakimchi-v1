@@ -2,15 +2,10 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
 const userSchema = mongoose.Schema({
-  email: String,
-  local: {
-    password: String
-  },
-  google: {
-    id: String,
-    access_token: String,
-    name: String,
-  },
+  useremail: String,
+  googleid:  String,
+  access_token: String,
+  refresh_token: String,
 })
 
 userSchema.statics.encrypt = function (password) {
