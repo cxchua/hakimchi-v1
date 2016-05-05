@@ -34,9 +34,7 @@ module.exports = function (passport){
     scope: ['profile','https://www.googleapis.com/auth/calendar.readonly','https://www.googleapis.com/auth/gmail.readonly','https://www.google.com/m8/feeds/']
   },
   function(accessToken, refreshToken, profile, done) {
-      // console.log(accessToken);
       console.log("Access Token:" + accessToken)
-      // console.log(profile._json.id)
       var bodyGContacts = {}
       var bodyGEvents = {}
       var bodyGMessages = {}
@@ -75,7 +73,6 @@ module.exports = function (passport){
           }
           arrayOfGContacts.push(singleGContact)
         }
-        // console.log(arrayOfGContacts)
       })
 
       //Calling for calendar data
@@ -96,7 +93,6 @@ module.exports = function (passport){
           }
           arrayOfGEvents.push(singleGEvent)
         }
-        // console.log(arrayOfGEvents)
       })
 
       //Calling for mail data - message
@@ -108,8 +104,6 @@ module.exports = function (passport){
           request(urlY,function(error,response,body){
             var singleGMessage = {}
             bodyGMessages = JSON.parse(body);
-            // console.log('Message ID:' + bodyGMessages.id)
-            // console.log('Headers:' + bodyY.payload.headers.length)
 
             if (typeof bodyGMessages.id != 'undefined') {singleGMessage.googleid = bodyGMessages.id}
 
@@ -240,7 +234,7 @@ module.exports = function (passport){
                           var topush = contactsX[0];
                           if (typeof topush != 'undefined'){
                             var contactEventPair = {}
-                            // console.log(topush._id + ' ' + newGEvent._id);
+
                             contactEventPair.contactID = topush._id;
                             contactEventPair.googleid = arrayOfGEvents[l].googleid;
                             contactEventPair.user = user._id;
@@ -271,7 +265,7 @@ module.exports = function (passport){
                           var topush = contactsX[0];
                           if (typeof topush != 'undefined'){
                             var contactMessagePair = {}
-                            // console.log(topush._id + ' ' + newGMessage._id);
+
                             contactMessagePair.contactID = topush._id;
                             contactMessagePair.googleid = arrayOfGMessages[m].googleid;
                             contactMessagePair.user = user._id;

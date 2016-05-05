@@ -11,7 +11,7 @@ const gcontactSchema = mongoose.Schema({
     FBMsg                 : Date,
     Whatsapp              : Date,
     OtherInteraction      : Date,
-    LatestInteraction     : Date,
+    LatestInteractionOverall     : Date,
   },
   user            : {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
 

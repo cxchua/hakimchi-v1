@@ -12,17 +12,10 @@ function googleCallback (req, res) {
     if (err) throw err
     req.logIn(user, function (err) {
       if (err) throw err
-      // console.log(user)
-      // console.log('From googleCallback' + info.accesstoken);
-      // request("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token="+info.accesstoken,function(error,response,body){
-      //   console.log('This is the body from contacts' + body);
-      //
-      // })
-      // createProfile(req, res, function () {
-      //   res.redirect('/users/' + user.github.username)
-      // })
+
+      console.log(user)
+      res.redirect('/api/lastcontact/'+user._id)
     })
-    res.send("Hey")
   })(req, res)
 }
 

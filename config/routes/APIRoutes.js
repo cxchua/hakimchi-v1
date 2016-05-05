@@ -19,17 +19,33 @@ function authenticatedUser(req, res, next){
  * under its corresponding section below
  */
 
-//=============== API Routes Controller ========================
+//=============== API Routes Controller =============================
 
-// router.route('/api/contacts')
-//     .get(APIController.getAll)
+router.route('/api/contacts-date/:id')
+    .get(APIController.getContactsAllContactDate)
 
-router.route('/api/contacts/:id')
-    .get(APIController.getContactsAll)
+
+router.route('/api/contacts-alpha/:id')
+    .get(APIController.getContactsAllAlpha)
 
 
 router.route('/api/events/:id')
     .get(APIController.getEventsAll)
+
+
+router.route('/api/messages/:id')
+    .get(APIController.getMessagesAll)
+
+// generate last interaction date for all contacts of user
+router.route('/api/lastcontact/:id')
+    .get(APIController.lastContact)
+
+
+// generate last interaction date for all contacts of user
+router.route('/api/getcontactdetails/:id/:contactid')
+    .get(APIController.getContactDetails)
+
+
 
 //================ End of Routes =======================================
 
