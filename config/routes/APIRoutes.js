@@ -19,14 +19,17 @@ function authenticatedUser(req, res, next){
  * under its corresponding section below
  */
 
-//=============== API Routes to Products Controller ========================
+//=============== API Routes Controller ========================
 
 // router.route('/api/contacts')
 //     .get(APIController.getAll)
 
 router.route('/api/contacts/:id')
-    .get(APIController.getContact)
+    .get(APIController.getContactsAll)
 
+
+router.route('/api/events/:id')
+    .get(APIController.getEventsAll)
 
 //================ End of Routes =======================================
 

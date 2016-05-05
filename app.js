@@ -19,7 +19,7 @@ const loginRoutes = require(__dirname + '/config/routes/loginRoutes')
 const APIRoutes = require(__dirname + '/config/routes/APIRoutes');
 
 //setup mongoDB
-const mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/express-passport'
+const mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/Hakimchi'
 const port = process.env.PORT || 3000
 mongoose.connect(mongoUri)
 
@@ -35,9 +35,9 @@ app.use(morgan('dev'))
 app.use(cookieParser())
 app.use(bodyParser())
 app.use(bodyParser.urlencoded({extend: true}))
-app.use(session({secret: "Hakimchiii"}))
+// app.use(session({secret: "Hakimchiii"}))
 app.use(passport.initialize())
-app.use(passport.session())
+// app.use(passport.session())
 app.use(flash())
 app.use(methodOverride('_method'))
 

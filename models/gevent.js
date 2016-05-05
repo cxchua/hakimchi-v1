@@ -5,6 +5,7 @@ const geventSchema = mongoose.Schema({
   eventDate       : Date,
   eventSummary    : String,
   eventAttendees  : [String],
+  googleid        : String,  
   user            : {type: mongoose.Schema.ObjectId, ref: 'User', required: true},
   gcontacts       : [{type: mongoose.Schema.ObjectId, ref: 'Gcontact', required: false}]
 })

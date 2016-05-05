@@ -7,6 +7,7 @@ const gmessageSchema = mongoose.Schema({
   messageTo         : [String],
   messageCc         : [String],
   messageSubject    : String,
+  googleid          : String,
   user              : {type: mongoose.Schema.ObjectId, ref: 'User', required: true},
   gcontacts         : [{type: mongoose.Schema.ObjectId, ref: 'Gcontact', required: false}]
 })
