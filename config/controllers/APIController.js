@@ -195,8 +195,9 @@ function lastContact(req, res) {
       })
 
     }
+    res.redirect('http://localhost:3001/home/?id='+id+'&')    
   })
-  res.send("Done without error")
+
 }
 
 
