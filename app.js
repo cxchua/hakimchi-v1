@@ -16,7 +16,7 @@ const expressJWT = require('express-jwt')
 
 //route definitions
 const loginRoutes = require(__dirname + '/config/routes/loginRoutes')
-const APIRoutes = require(__dirname + "/config/routes/APIRoutes");
+const APIRoutes = require(__dirname + '/config/routes/APIRoutes');
 
 //setup mongoDB
 const mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/express-passport'
@@ -60,8 +60,8 @@ app.use(ejsLayouts)
 // app.use('/api', expressJWT({secret: "Hakimchiii"}));
 
 // routes and controllers middleware
-app.use('/', loginRoutes)
-app.use('/api', APIRoutes)
+app.use(loginRoutes)
+app.use(APIRoutes)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

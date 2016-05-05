@@ -24,7 +24,7 @@ function authenticatedUser(req, res, next){
 // router.route('/api/contacts')
 //     .get(APIController.getAll)
 
-router.route('/api/contacts/572ab385411cc5c0367606c1')
+router.route('/api/contacts/:id')
     .get(APIController.getContact)
 
 

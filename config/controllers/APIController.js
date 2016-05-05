@@ -3,7 +3,7 @@ var Gcontact = require('../../models/gcontact');
 
 function getContact(req, res) {
   var id = req.params.id;
-  Gcontact.findById({user: id}, function(error, contacts) {
+  Gcontact.find({'user': id}, function(error, contacts) {
 
     if(error) res.json({message: 'Could not find contacts b/c:' + error});
     console.log(id);
