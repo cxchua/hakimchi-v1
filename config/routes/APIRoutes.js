@@ -40,7 +40,6 @@ router.route('/api/messages/:id')
 router.route('/api/lastcontact/:id')
     .get(APIController.lastContact)
 
-
 // generate last interaction date for all contacts of user
 router.route('/api/getcontactdetails/:id/:contactid')
     .get(APIController.getContactDetails)

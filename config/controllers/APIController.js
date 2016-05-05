@@ -127,8 +127,8 @@ function lastContact(req, res) {
       Gevent.find({'user': id, 'gcontacts': contactsOfUser[x]._id}).where('eventDate').lt(currentTime).sort('-EventDate').exec(callback1);
 
       function callback1(error, events) {
-        console.log('users ' + contactsOfUser[x].contactname)
-        console.log(events)
+        // console.log('users ' + contactsOfUser[x].contactname)
+        // console.log(events)
 
         if(error) res.json({message: 'Could not find events b/c:' + error});
 
@@ -150,8 +150,8 @@ function lastContact(req, res) {
       Gmessage.find({'user': id, 'gcontacts': contactsOfUser[x]._id}).where('messageDate').lt(currentTime).sort('-messageDate').exec(callback2);
 
       function callback2(error, messagesX) {
-        console.log('users ' + contactsOfUser[x].contactname)
-        console.log(messagesX)
+        // console.log('users ' + contactsOfUser[x].contactname)
+        // console.log(messagesX)
 
         if(error) res.json({message: 'Could not find message b/c:' + error});
 
@@ -162,12 +162,6 @@ function lastContact(req, res) {
             lastContactMessageDate = messagesX[messagesX.length-1].messageDate;
             contact.contactLastInteraction.Email = lastContactMessageDate
 
-            if (contact.contactLastInteraction.Email - contact.contactLastInteraction.Meeting < 0){
-              contact.contactLastInteraction.LatestInteractionOverall = contact.contactLastInteraction.Meeting
-            }
-            if (contact.contactLastInteraction.Email - contact.contactLastInteraction.Meeting > 0){
-              contact.contactLastInteraction.LatestInteractionOverall = contact.contactLastInteraction.Email
-            }
             contact.save(function(err, gmessage){
               if(err) return done(err);
             })
@@ -178,14 +172,22 @@ function lastContact(req, res) {
 
       Gcontact.findById(contactsOfUser[x]._id, function(err, contact){
         if (err) console.log(err)
+        console.log("checking last interaction")
+        if (contact.contactLastInteraction.Email - contact.contactLastInteraction.Meeting < 0){
+          contact.contactLastInteraction.LatestInteractionOverall = contact.contactLastInteraction.Meeting
+        }
 
-        if (typeof contact.contactLastInteraction.Email != 'undefined'){
+        if (contact.contactLastInteraction.Email - contact.contactLastInteraction.Meeting > 0){
           contact.contactLastInteraction.LatestInteractionOverall = contact.contactLastInteraction.Email
         }
-        if (typeof contact.contactLastInteraction.Meeting != 'undefined'){
-          contact.contactLastInteraction.LatestInteractionOverall = contact.contactLastInteraction.Meeting
-        };
-
+        else {
+          if (typeof contact.contactLastInteraction.Email != 'undefined'){
+            contact.contactLastInteraction.LatestInteractionOverall = contact.contactLastInteraction.Email
+          }
+          if (typeof contact.contactLastInteraction.Meeting != 'undefined'){
+            contact.contactLastInteraction.LatestInteractionOverall = contact.contactLastInteraction.Meeting
+          };
+        }
         contact.save(function(err, gmessage){
           if(err) return done(err);
         })
