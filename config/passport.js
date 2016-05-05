@@ -76,7 +76,7 @@ module.exports = function (passport){
       })
 
       //Calling for calendar data
-      request("https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json&start-index=1&max-results=10&access_token="+accessToken,function(error,response,body){
+      request("https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json&start-date=50daysAgo&max-results=100&access_token="+accessToken,function(error,response,body){
         bodyGEvents = JSON.parse(body);
         // console.log('CALENDAR EVENTS:')
         for(let i=0; i<bodyGEvents.items.length; i++){
@@ -96,7 +96,7 @@ module.exports = function (passport){
       })
 
       //Calling for mail data - message
-      request("https://www.googleapis.com/gmail/v1/users/me/messages?alt=json&start-index=1&max-results=10&access_token="+accessToken,function(error,response,body){
+      request("https://www.googleapis.com/gmail/v1/users/me/messages?alt=json&start-date=50daysAgo&max-results=100&access_token="+accessToken,function(error,response,body){
         var bodyX = JSON.parse(body);
         // console.log('MESSAGE DATA:')
         for(let i=0; i<bodyX.messages.length; i++){
