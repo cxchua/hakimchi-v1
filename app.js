@@ -16,6 +16,7 @@ const expressJWT = require('express-jwt')
 
 //route definitions
 const loginRoutes = require(__dirname + '/config/routes/loginRoutes')
+const APIRoutes = require(__dirname + "/config/routes/APIRoutes");
 
 //setup mongoDB
 const mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/express-passport'
@@ -34,7 +35,7 @@ app.use(morgan('dev'))
 app.use(cookieParser())
 app.use(bodyParser())
 app.use(bodyParser.urlencoded({extend: true}))
-// app.use(session({secret: process.env.SESSIONSECRET}))
+app.use(session({secret: "Hakimchiii"}))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
@@ -56,10 +57,11 @@ app.set('view engine', 'ejs')
 app.use(express.static(__dirname + '/public'))
 app.use(ejsLayouts)
 
+// app.use('/api', expressJWT({secret: "Hakimchiii"}));
 
 // routes and controllers middleware
 app.use('/', loginRoutes)
-
+app.use('/api', APIRoutes)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

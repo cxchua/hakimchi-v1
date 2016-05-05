@@ -5,9 +5,10 @@ const gmessageSchema = mongoose.Schema({
   messageDate       : Date,
   messageFrom       : String,
   messageTo         : [String],
-  messageCc         : [String],  
+  messageCc         : [String],
   messageSubject    : String,
-  user            : {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
+  user              : {type: mongoose.Schema.ObjectId, ref: 'User', required: true},
+  gcontacts         : [{type: mongoose.Schema.ObjectId, ref: 'Gcontact', required: false}]
 })
 
 

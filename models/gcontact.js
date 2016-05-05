@@ -2,13 +2,17 @@ const mongoose = require('mongoose')
 
 const gcontactSchema = mongoose.Schema({
   contactname     : String,
-  contactEmail1   : String,
-  contactEmail2   : String,
-  contactEmail3   : String,
-  contactPhone1   : String,
-  contactPhone2   : String,
-  contactPhone3   : String,     
+  contactEmail    : [String],
+  contactPhone    : [String],
   contactBirthday : Date,
+  contactLastInteraction: {
+    Meeting               : Date,
+    Email                 : Date,
+    FBMsg                 : Date,
+    Whatsapp              : Date,
+    OtherInteraction      : Date,
+    LatestInteraction     : Date,
+  },
   user            : {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
 
 })

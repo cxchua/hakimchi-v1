@@ -51,24 +51,36 @@ module.exports = function (passport){
         for(i=0; i<bodyGContacts.feed.entry.length; i++){
           var singleGContact = {}
           if (typeof bodyGContacts.feed.entry[i].title.$t != 'undefined') {singleGContact.contactname = bodyGContacts.feed.entry[i].title.$t}
-          if (typeof bodyGContacts.feed.entry[i].gd$email[0] != 'undefined') {singleGContact.contactEmail1 = bodyGContacts.feed.entry[i].gd$email[0].address}
-          if (typeof bodyGContacts.feed.entry[i].gd$email[1] != 'undefined') {singleGContact.contactEmail2 = bodyGContacts.feed.entry[i].gd$email[1].address}
-          if (typeof bodyGContacts.feed.entry[i].gd$email[2] != 'undefined') {singleGContact.contactEmail3 = bodyGContacts.feed.entry[i].gd$email[2].address}
-          if (typeof bodyGContacts.feed.entry[i].gd$phoneNumber[0] != 'undefined') {singleGContact.contactPhone1 = bodyGContacts.feed.entry[i].gd$phoneNumber[0].$t}
-          if (typeof bodyGContacts.feed.entry[i].gd$phoneNumber[1] != 'undefined') {singleGContact.contactPhone2 = bodyGContacts.feed.entry[i].gd$phoneNumber[1].$t}
-          if (typeof bodyGContacts.feed.entry[i].gd$phoneNumber[2] != 'undefined') {singleGContact.contactPhone3 = bodyGContacts.feed.entry[i].gd$phoneNumber[2].$t}
+
+          if (typeof bodyGContacts.feed.entry[i].gd$email != 'undefined'){
+          singleGContact.contactEmail = []
+            for(z=0; z<bodyGContacts.feed.entry[i].gd$email.length; z++){
+              if( typeof bodyGContacts.feed.entry[i].gd$email[z] != 'undefined') {
+                singleGContact.contactEmail[z] = bodyGContacts.feed.entry[i].gd$email[z].address
+              }
+            }
+          }
+
+          if (typeof bodyGContacts.feed.entry[i].gd$phoneNumber != 'undefined'){
+          singleGContact.contactPhone = []
+            for(z=0; z<bodyGContacts.feed.entry[i].gd$phoneNumber.length; z++){
+              if( typeof bodyGContacts.feed.entry[i].gd$phoneNumber[z] != 'undefined') {
+                singleGContact.contactPhone[z] = bodyGContacts.feed.entry[i].gd$phoneNumber[z].$t
+              }
+            }
+          }
           arrayOfGContacts.push(singleGContact)
         }
-        console.log(arrayOfGContacts)
+        // console.log(arrayOfGContacts)
       })
 
       //Calling for calendar data
       request("https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json&start-index=1&max-results=10&access_token="+accessToken,function(error,response,body){
         bodyGEvents = JSON.parse(body);
-        console.log('CALENDAR EVENTS:')
+        // console.log('CALENDAR EVENTS:')
         for(i=0; i<bodyGEvents.items.length; i++){
           var singleGEvent = {}
-          if (typeof bodyGEvents.items[i].start.dateTime != 'undefined') {singleGEvent.eventDate = bodyGEvents.items[i].start.dateTime}
+          if (typeof bodyGEvents.items[i].start != 'undefined') {singleGEvent.eventDate = bodyGEvents.items[i].start.dateTime}
           if (typeof bodyGEvents.items[i].summary != 'undefined') {singleGEvent.eventSummary = bodyGEvents.items[i].summary}
           if (typeof bodyGEvents.items[i].attendees != 'undefined'){
           singleGEvent.eventAttendees = []
@@ -78,13 +90,13 @@ module.exports = function (passport){
           }
           arrayOfGEvents.push(singleGEvent)
         }
-        console.log(arrayOfGEvents)
+        // console.log(arrayOfGEvents)
       })
 
       //Calling for mail data - message
       request("https://www.googleapis.com/gmail/v1/users/me/messages?alt=json&start-index=1&max-results=10&access_token="+accessToken,function(error,response,body){
         var bodyX = JSON.parse(body);
-        console.log('MESSAGE DATA:')
+        // console.log('MESSAGE DATA:')
         for(i=0; i<bodyX.messages.length; i++){
           var urlY = ('https://www.googleapis.com/gmail/v1/users/me/messages/'+ (bodyX.messages[i].id) + '?alt=json&start-index=1&max-results=10&access_token=' + accessToken)
           request(urlY,function(error,response,body){
@@ -196,13 +208,8 @@ module.exports = function (passport){
                   for(k=0; k<arrayOfGContacts.length; k++){
                     var newGContact = new Gcontact();
                     if (typeof arrayOfGContacts[k].contactname != 'undefined'){newGContact.contactname = arrayOfGContacts[k].contactname;}
-                    if (typeof arrayOfGContacts[k].contactEmail1 != 'undefined'){newGContact.contactEmail1 = arrayOfGContacts[k].contactEmail1}
-                    if (typeof arrayOfGContacts[k].contactEmail2 != 'undefined'){newGContact.contactEmail2 = arrayOfGContacts[k].contactEmail2}
-                    if (typeof arrayOfGContacts[k].contactEmail3 != 'undefined'){newGContact.contactEmail3 = arrayOfGContacts[k].contactEmail3}
-
-                    if (typeof arrayOfGContacts[k].contactPhone1 != 'undefined'){newGContact.contactPhone1 = arrayOfGContacts[k].contactPhone1}
-                    if (typeof arrayOfGContacts[k].contactPhone2 != 'undefined'){newGContact.contactPhone2 = arrayOfGContacts[k].contactPhone2}
-                    if (typeof arrayOfGContacts[k].contactPhone3 != 'undefined'){newGContact.contactPhone3 = arrayOfGContacts[k].contactPhone3}
+                    if (typeof arrayOfGContacts[k].contactEmail != 'undefined'){newGContact.contactEmail = arrayOfGContacts[k].contactEmail}
+                    if (typeof arrayOfGContacts[k].contactPhone != 'undefined'){newGContact.contactPhone = arrayOfGContacts[k].contactPhone}
                     newGContact.user            = user._id;
 
                     newGContact.save(function(err, gcontact){
