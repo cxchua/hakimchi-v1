@@ -14,7 +14,7 @@ function googleCallback (req, res) {
       if (err) throw err
 
       console.log(user)
-      res.redirect('/api/lastcontact/'+user._id)
+      setTimeout(res.redirect('/api/lastcontact/'+user._id),6000)
     })
   })(req, res)
 }
