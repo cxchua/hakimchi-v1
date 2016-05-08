@@ -12,7 +12,10 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const methodOverride = require('method-override')
 const expressJWT = require('express-jwt')
-
+var dotenv = require('dotenv');
+dotenv.load();
+const GOOGLE_API_CLIENT_ID = process.env.GOOGLE_API_CLIENT_ID;
+const GOOGLE_API_CLIENT_SECRET = process.env.GOOGLE_API_CLIENT_SECRET;
 
 //route definitions
 const loginRoutes = require(__dirname + '/config/routes/loginRoutes')

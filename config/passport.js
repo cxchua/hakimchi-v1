@@ -10,9 +10,10 @@ const request = require('request')
 const request2 = require('request-json')
 var google = require('googleapis');
 var client = request2.createClient('http://localhost:3000/');
-
-// const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID
-// const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET
+var dotenv = require('dotenv');
+dotenv.load();
+const GOOGLE_API_CLIENT_ID = process.env.GOOGLE_API_CLIENT_ID;
+const GOOGLE_API_CLIENT_SECRET = process.env.GOOGLE_API_CLIENT_SECRET;
 
 module.exports = function (passport){
   // store sessions (serialize & dezerialize)
@@ -28,8 +29,8 @@ module.exports = function (passport){
   })
 
   passport.use('google', new GoogleStrategy({
-    clientID: '266175055372-fvrdomie0qlg3kecntp32ub090oraj05.apps.googleusercontent.com',
-    clientSecret: 'avYamacln1oZ7mlJpGcsfeLL',
+    clientID: GOOGLE_API_CLIENT_ID,
+    clientSecret: GOOGLE_API_CLIENT_SECRET,
     callbackURL: 'http://localhost:3000/auth/google/callback',
     scope: ['profile','https://www.googleapis.com/auth/calendar.readonly','https://www.googleapis.com/auth/gmail.readonly','https://www.google.com/m8/feeds/']
   },
