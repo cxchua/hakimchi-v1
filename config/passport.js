@@ -8,9 +8,10 @@ const LocalStrategy = require('passport-local').Strategy
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const request = require('request')
 const request2 = require('request-json')
-var google = require('googleapis');
-var client = request2.createClient('http://localhost:3000/');
-var config = require('../.env.json')[process.env.NODE_ENV || 'development'];
+const google = require('googleapis');
+const async = require('async')
+// var client = request2.createClient('http://localhost:3000/');
+const config = require('../.env.json')[process.env.NODE_ENV || 'development'];
 
 module.exports = function (passport){
   // store sessions (serialize & dezerialize)
@@ -31,7 +32,7 @@ module.exports = function (passport){
     callbackURL: 'http://localhost:3000/auth/google/callback',
     scope: ['profile','https://www.googleapis.com/auth/calendar.readonly','https://www.googleapis.com/auth/gmail.readonly','https://www.google.com/m8/feeds/']
   },
-  function(accessToken, refreshToken, profile, done) {
+  function(accessToken, refreshToken, profile, doneGoogleStrategy) {
       console.log("Access Token:" + accessToken)
       var bodyGContacts = {}
       var bodyGEvents = {}
@@ -175,7 +176,7 @@ module.exports = function (passport){
         }
       })
 
-      //Check if user exists; if not create user entry + populate the contacts, events and calendar events
+      // Check if user exists; if not create user entry + populate the contacts, events and calendar events
       setTimeout(function(){
           User.findOne({'googleid': profile._json.id }, function (err, user) {
             if (err) {
@@ -190,7 +191,7 @@ module.exports = function (passport){
                   console.log(err) // handle errors!
                 } else {
                   console.log('updating user')
-                  done(null, user,{message:accessToken})
+                  doneGoogleStrategy(null, user,{message:accessToken})
                 }
               })
             } else {
@@ -214,7 +215,7 @@ module.exports = function (passport){
                     newGContact.user            = user._id;
 
                     newGContact.save(function(err, gcontact){
-                      if(err) return done(err);
+                      if(err) return doneGoogleStrategy(err);
                     })
                   }
 
@@ -228,7 +229,7 @@ module.exports = function (passport){
                       newGEvent.eventAttendees = arrayOfGEvents[l].eventAttendees;
                       for(let t=0; t<newGEvent.eventAttendees.length; t++){
                         Gcontact.find({'contactEmail':newGEvent.eventAttendees[t],'user':user._id}, function (error,contactsX){
-                          if(error) {console.log};
+                          if(error) {console.log(error)};
                           var topush = contactsX[0];
                           if (typeof topush != 'undefined'){
                             var contactEventPair = {}
@@ -237,13 +238,13 @@ module.exports = function (passport){
                             contactEventPair.googleid = arrayOfGEvents[l].googleid;
                             contactEventPair.user = user._id;
                             arrayOfContactsLinkedToEvents.push(contactEventPair)
-                            console.log(arrayOfContactsLinkedToEvents)
+                            // console.log(arrayOfContactsLinkedToEvents)
                           }
                         });
                       }
                     }
                     newGEvent.save(function(err, gevent){
-                      if(err) return done(err);
+                      if(err) return doneGoogleStrategy(err);
                     })
                   }
 
@@ -259,7 +260,7 @@ module.exports = function (passport){
                       newGMessage.messageTo       = arrayOfGMessages[m].messageTo;
                       for(let pal=0; pal<newGMessage.messageTo.length; pal++){
                         Gcontact.find({'contactEmail':newGMessage.messageTo[pal],'user':user._id}, function (error,contactsX){
-                          if(error) {console.log};
+                          if(error) {console.log(error)};
                           var topush = contactsX[0];
                           if (typeof topush != 'undefined'){
                             var contactMessagePair = {}
@@ -268,19 +269,19 @@ module.exports = function (passport){
                             contactMessagePair.googleid = arrayOfGMessages[m].googleid;
                             contactMessagePair.user = user._id;
                             arrayOfContactsLinkedToMessages.push(contactMessagePair)
-                            console.log(arrayOfContactsLinkedToMessages)
+                            // console.log(arrayOfContactsLinkedToMessages)
                           }
                         });
                       }
                     }
 
                     newGMessage.save(function(err, gmessage){
-                      if(err) return done(err);
+                      if(err) return doneGoogleStrategy(err);
                     })
                   }
 
                   console.log('saving user')
-                  done(null, user,{message:accessToken})
+                  doneGoogleStrategy(null, user,{message:accessToken})
                 }
               })
 
@@ -294,7 +295,7 @@ module.exports = function (passport){
             Gevent.find({'googleid':arrayOfContactsLinkedToEvents[s].googleid,'user':arrayOfContactsLinkedToEvents[s].user}, function(error,eventX){
               eventX[0].gcontacts.push(arrayOfContactsLinkedToEvents[s].contactID);
               eventX[0].save(function(err,event){
-                if(err) return done(err)
+                if(err) return doneGoogleStrategy(err)
               })
             })
           }
@@ -302,7 +303,7 @@ module.exports = function (passport){
             Gmessage.find({'googleid':arrayOfContactsLinkedToMessages[w].googleid,'user':arrayOfContactsLinkedToMessages[w].user}, function(error,messageX){
               messageX[0].gcontacts.push(arrayOfContactsLinkedToMessages[w].contactID);
               messageX[0].save(function(err,event){
-                if(err) return done(err)
+                if(err) return doneGoogleStrategy(err)
               })
             })
           }

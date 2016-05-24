@@ -172,7 +172,6 @@ function lastContact(req, res) {
 
       Gcontact.findById(contactsOfUser[x]._id, function(err, contact){
         if (err) console.log(err)
-        console.log("checking last interaction")
         if (contact.contactLastInteraction.Email - contact.contactLastInteraction.Meeting < 0){
           contact.contactLastInteraction.LatestInteractionOverall = contact.contactLastInteraction.Meeting
         }
@@ -195,7 +194,7 @@ function lastContact(req, res) {
       })
 
     }
-    res.redirect('http://localhost:3001/home/?id='+id+'&')    
+    res.redirect('http://localhost:3001/home/?id='+id+'&')
   })
 
 }

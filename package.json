@@ -10,7 +10,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "async": "^2.0.0-rc.3",
+    "async": "^2.0.0-rc.4",
     "bcrypt": "^0.8.5",
     "body-parser": "^1.15.0",
     "cheerio": "latest",
